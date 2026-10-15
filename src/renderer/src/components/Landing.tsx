@@ -226,8 +226,7 @@ export default function Landing(): React.JSX.Element {
   const repos = useAppStore((s) => s.repos)
   const openModal = useAppStore((s) => s.openModal)
 
-  const createTargetLabel =
-    repos.length > 0 && repos.every((repo) => isGitRepoKind(repo)) ? 'Worktree' : 'Workspace'
+  const createGitWorktree = repos.length > 0 && repos.every((repo) => isGitRepoKind(repo))
   const hasProjects = repos.length > 0
   const hasGitHubProject = useMemo(() => hasGitHubBackedProject(repos), [repos])
   const showGitHubSupportFooter = repos.length === 0 || hasGitHubProject
@@ -244,34 +243,41 @@ export default function Landing(): React.JSX.Element {
       {
         id: 'create',
         shortcut: createWorktreeShortcut,
-        action: `Create ${createTargetLabel.toLowerCase()}`
+        action: createGitWorktree
+          ? translate('auto.components.Landing.shortcutCreateWorktree', 'Create worktree')
+          : translate('auto.components.Landing.shortcutCreateWorkspace', 'Create workspace')
       },
-      { id: 'up', shortcut: previousWorktreeShortcut, action: 'Move up workspace' },
-      { id: 'down', shortcut: nextWorktreeShortcut, action: 'Move down workspace' }
+      {
+        id: 'up',
+        shortcut: previousWorktreeShortcut,
+        action: translate('auto.components.Landing.shortcutPreviousWorkspace', 'Previous workspace')
+      },
+      {
+        id: 'down',
+        shortcut: nextWorktreeShortcut,
+        action: translate('auto.components.Landing.shortcutNextWorkspace', 'Next workspace')
+      }
     ]
-  }, [createTargetLabel, createWorktreeShortcut, nextWorktreeShortcut, previousWorktreeShortcut])
+  }, [createGitWorktree, createWorktreeShortcut, nextWorktreeShortcut, previousWorktreeShortcut])
 
   return (
-    <div className="absolute inset-0 flex items-center justify-center bg-background">
+    <div className="landing absolute inset-0">
       <div className="w-full max-w-lg px-6">
-        <div className="flex flex-col items-center gap-4 py-8">
-          <div
-            className="flex items-center justify-center size-20 rounded-2xl border border-border/80 shadow-lg shadow-black/40"
-            style={{ backgroundColor: '#12181e' }}
-          >
+        <div className="landing-content py-8">
+          <div className="flex size-[4.5rem] items-center justify-center rounded-2xl border border-border bg-card shadow-xs">
             <img
               src={logo}
               alt={translate('auto.components.Landing.520304a067', 'Orca logo')}
-              className="size-12"
+              className="size-11 invert dark:invert-0"
             />
           </div>
-          <h1 className="text-4xl font-bold text-foreground tracking-tight">
-            {translate('auto.components.Landing.6ca6ff404e', 'ORCA')}
+          <h1 className="text-[2rem] font-semibold tracking-tight text-foreground">
+            {translate('auto.components.Landing.6ca6ff404e', 'Orca')}
           </h1>
 
           {preflightIssues.length > 0 && <PreflightBanner issues={preflightIssues} repos={repos} />}
 
-          <p className="text-sm text-muted-foreground text-center">
+          <p className="landing-hint max-w-sm text-center text-pretty text-sm leading-relaxed">
             {hasProjects
               ? translate(
                   'auto.components.Landing.9c00bd4adf',
@@ -280,9 +286,10 @@ export default function Landing(): React.JSX.Element {
               : translate('auto.components.Landing.cd21242762', 'Add a project to get started.')}
           </p>
 
-          <div className="flex items-center justify-center gap-2.5 flex-wrap">
+          <div className="flex flex-wrap items-center justify-center gap-2.5">
             <button
-              className="inline-flex items-center gap-1.5 bg-secondary/70 border border-border/80 text-foreground font-medium text-sm px-4 py-2 rounded-md cursor-pointer hover:bg-accent transition-colors"
+              type="button"
+              className="landing-action inline-flex items-center gap-1.5 px-4 font-medium"
               onClick={() => openModal('add-repo')}
             >
               <FolderPlus className="size-3.5" />
@@ -290,19 +297,21 @@ export default function Landing(): React.JSX.Element {
             </button>
 
             <button
-              className="inline-flex items-center gap-1.5 bg-secondary/70 border border-border/80 text-foreground font-medium text-sm px-4 py-2 rounded-md cursor-pointer hover:bg-accent transition-colors"
+              type="button"
+              className="landing-action inline-flex items-center gap-1.5 px-4 font-medium"
               onClick={() => openModal('new-workspace-composer', { telemetrySource: 'unknown' })}
             >
               <GitBranchPlus className="size-3.5" />
-              {translate('auto.components.Landing.76a95f7f47', 'Create')}{' '}
-              {createTargetLabel.toLowerCase()}
+              {createGitWorktree
+                ? translate('auto.components.Landing.createWorktree', 'Create worktree')
+                : translate('auto.components.Landing.createWorkspace', 'Create workspace')}
             </button>
           </div>
 
-          <div className="mt-6 w-full max-w-xs space-y-2">
+          <div className="mt-6 w-full max-w-sm space-y-2">
             {shortcuts.map((shortcut) => (
               <div key={shortcut.id} className="grid grid-cols-[1fr_auto] items-center gap-3">
-                <span className="text-sm text-muted-foreground">{shortcut.action}</span>
+                <span className="landing-hint text-[13px] leading-snug">{shortcut.action}</span>
                 <ShortcutKeyCombo
                   keys={shortcut.shortcut.keys}
                   doubleTap={shortcut.shortcut.doubleTap}

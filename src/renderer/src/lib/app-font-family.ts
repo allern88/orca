@@ -1,7 +1,23 @@
 import { DEFAULT_APP_FONT_FAMILY } from '../../../shared/constants'
 
+// Why: Geist covers Latin only; system CJK faces render before generic sans so
+// zh/ja/ko UI copy matches platform conventions without a per-locale font switch.
+const APP_FONT_SCRIPT_FALLBACKS = [
+  'PingFang SC',
+  'Hiragino Sans GB',
+  'Microsoft YaHei',
+  'Apple SD Gothic Neo',
+  'Malgun Gothic',
+  'Yu Gothic UI',
+  'Hiragino Sans',
+  'Noto Sans SC',
+  'Noto Sans JP',
+  'Noto Sans KR'
+] as const
+
 const APP_FONT_FALLBACKS = [
   DEFAULT_APP_FONT_FAMILY,
+  ...APP_FONT_SCRIPT_FALLBACKS,
   '-apple-system',
   'BlinkMacSystemFont',
   'Segoe UI',
