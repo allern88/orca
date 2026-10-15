@@ -1512,7 +1512,13 @@
         "0d0ace8861": "GitHub에서 별표 주기",
         "ec43b38ba7": "GitHub에 별표 표시됨",
         "157bb5ecbb": "GitHub 열기",
-        "preflightDismiss": "닫기"
+        "preflightDismiss": "닫기",
+        "createWorkspace": "워크스페이스 만들기",
+        "createWorktree": "작업 트리 만들기",
+        "shortcutCreateWorkspace": "워크스페이스 만들기",
+        "shortcutCreateWorktree": "작업 트리 만들기",
+        "shortcutNextWorkspace": "다음 워크스페이스",
+        "shortcutPreviousWorkspace": "이전 워크스페이스"
       },
       "LinearIssueMarkdownDescriptionEditor": {
         "d9c47069ef": "Markdown",
